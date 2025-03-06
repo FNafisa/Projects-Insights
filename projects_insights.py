@@ -6,6 +6,22 @@ import plotly.graph_objects as go
 
 
 # Load your dummy dataset (replace this with your actual data loading logic)
+# Generate dummy data
+np.random.seed(42)
+categories = ["Other", "Infrastructure", "Renovation", "Design", "Importation", "Supervision", "Construction"]
+project_status = ["Future", "Ongoing"]
+
+# Create a DataFrame with random project counts
+data = {
+    "Category": np.random.choice(categories, 100),
+    "Status": np.random.choice(project_status, 100, p=[0.745, 0.255])
+}
+df = pd.DataFrame(data)
+
+# Calculate the distribution of projects by category
+category_distribution = df["Category"].value_counts().reset_index()
+category_distribution.columns = ["Category", "Count"]
+
 # first tab
 # Generate dummy data
 np.random.seed(42)
@@ -191,9 +207,74 @@ with col_image:
 with col_title:
     # Streamlit app
     st.title("Project Performance Insights")
+
+
 st.divider()
+# Create a bar chart
+fig3 = px.bar(
+    category_distribution,
+    x="Category",
+    y="Count",
+    title="Distribution of Projects by Category",
+    labels={"Category": "Project Category", "Count": "Number of Projects"},
+    text="Count",  # Display the count on top of each bar
+    color="Category",  # Add color to differentiate categories
+)
 
+# Update layout for better readability
+fig3.update_traces(textposition="outside")
+fig3.update_layout(xaxis_title="Project Category", yaxis_title="Number of Projects", showlegend=False)
 
+#  Pie chart
+status_counts = df["Status"].value_counts(normalize=True) * 100
+# Create donut chart
+fig1 = px.pie(
+    values=status_counts,
+    names=status_counts.index,
+    hole=0.5,
+    title="Future Projects vs Ongoing Projects",
+    labels={"names": "Status", "values": "Percentage"}
+)
+fig1.update_traces(textinfo="percent+label")
+# Calculate percentages
+infra_percentage = (df[df["Category"] == "Infrastructure"].shape[0] / df.shape[0]) * 100
+other_percentage = 100 - infra_percentage
+# Create donut chart
+fig2 = px.pie(
+    values=[infra_percentage, other_percentage],
+    names=["Infrastructure", "Other"],
+    hole=0.5,
+    title="Infrastructure Projects vs Other Projects",
+    labels={"names": "Category", "values": "Percentage"}
+)
+fig2.update_traces(textinfo="percent+label")
+
+col_pie1, col_pie2, col_table= st.columns([.25,.25,.3])
+with col_pie1:
+    # Display the first donut chart
+    st.subheader("Future Projects vs Ongoing Projects")
+    st.plotly_chart(fig1, use_container_width=True)
+with col_pie2:
+    # Display the second donut chart
+    st.subheader("Infrastructure Projects vs Other Projects")
+    st.plotly_chart(fig2, use_container_width=True)
+
+with col_table:
+    # Display the dataset
+    st.subheader("Project Performance Data")
+    st.write(project_performance)
+    # Add the bar chart to the Streamlit app
+
+col_bar, col_emp= st.columns(2)
+
+with col_bar:
+    st.subheader("Distribution of Projects by Category")
+    st.plotly_chart(fig3, use_container_width=True)
+
+# st.subheader("Distribution of Projects by Category")
+# st.plotly_chart(fig3, use_container_width=True)
+
+# Add the bar chart to the Streamlit app
 
 # Add KPIs in a row above the table
 col1, col2, col3 = st.columns(3)
@@ -204,9 +285,9 @@ with col2:
 with col3:
     st.metric(label="Portfolio Value", value="2000 billion SAR")
 
-# Display the dataset
-st.subheader("Project Performance Data")
-st.write(project_performance)
+# # Display the dataset
+# st.subheader("Project Performance Data")
+# st.write(project_performance)
 
 # Add a third tab for "Risk and Compliance"
 tab1, tab2, tab3 = st.tabs(["Projects Progress", "Financials", "Risk and Compliance"])
