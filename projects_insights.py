@@ -271,11 +271,7 @@ with col_bar:
     st.subheader("Distribution of Projects by Category")
     st.plotly_chart(fig3, use_container_width=True)
 
-# st.subheader("Distribution of Projects by Category")
-# st.plotly_chart(fig3, use_container_width=True)
-
-# Add the bar chart to the Streamlit app
-
+st.divider()
 # Add KPIs in a row above the table
 col1, col2, col3 = st.columns(3)
 with col1:
@@ -366,6 +362,8 @@ with tab2:
         Use this chart to understand the distribution of investments across projects.
         """)
     with col_bar2:
+        st.header("")
+        st.header("")
         # Insight 3: Budget & Cost Insights
         st.markdown("### Budget & Cost Insights")
         fig_budget = px.bar(budget_data, x="Project", y=["Planned Budget (SAR)", "Actual Cost (SAR)"], 
