@@ -346,9 +346,9 @@ with tab1:
 
 # Tab 2: Financials
 with tab2:
+    st.subheader("Financial Insights")
     col_bar1, col_bar2= st.columns(2)
     with col_bar1:
-        st.subheader("Financial Insights")
 
         # Insight 10: Portfolio Performance Insights
         st.markdown("### Portfolio Performance Insights")
@@ -362,8 +362,6 @@ with tab2:
         Use this chart to understand the distribution of investments across projects.
         """)
     with col_bar2:
-        st.header("")
-        st.header("")
         # Insight 3: Budget & Cost Insights
         st.markdown("### Budget & Cost Insights")
         fig_budget = px.bar(budget_data, x="Project", y=["Planned Budget (SAR)", "Actual Cost (SAR)"], 
